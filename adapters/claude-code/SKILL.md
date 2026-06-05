@@ -1,11 +1,11 @@
 ---
 name: frontend-standards
-description: 前端编码规范 - 覆盖命名、组件、状态管理、API请求、样式、TypeScript、注释、代码质量
+description: 前端编码规范 - 覆盖命名、组件、状态管理、API请求、样式、TypeScript、文件组织、导入规范
 when_to_use: 当需要编写或修改前端代码（创建组件、实现页面、添加功能、修改 UI）时使用
 context: fork
 ---
 
-# 前端编码规范 (v1.0.0)
+# 前端编码规范 (v2.0.0)
 
 ## 使用方式
 
@@ -30,35 +30,30 @@ context: fork
 
 | 当前任务 | 需要加载的文件 |
 |----------|---------------|
-| 创建/修改组件 | `Read {{AI_RULES_PATH}}/frontend-standards/component-patterns.md` 和 `naming-conventions.md` |
+| 创建/修改组件 | `Read {{AI_RULES_PATH}}/frontend-standards/naming-conventions.md` 和 `component-patterns.md` |
 | 添加 import 语句 | `Read {{AI_RULES_PATH}}/frontend-standards/import-organization.md` |
 | 管理状态 | `Read {{AI_RULES_PATH}}/frontend-standards/state-management.md` |
 | 编写 API 调用 | `Read {{AI_RULES_PATH}}/frontend-standards/api-requests.md` |
 | 编写样式 | `Read {{AI_RULES_PATH}}/frontend-standards/styling.md` |
 | 编写类型定义 | `Read {{AI_RULES_PATH}}/frontend-standards/typescript.md` |
 | 组织文件/目录 | `Read {{AI_RULES_PATH}}/frontend-standards/file-organization.md` |
-| 添加注释 | `Read {{AI_RULES_PATH}}/frontend-standards/comments.md` |
-| 代码重构/审查 | `Read {{AI_RULES_PATH}}/frontend-standards/lint-rules.md` |
-| 创建新项目 | `Read {{AI_RULES_PATH}}/frontend-standards/new-project-defaults.md` |
 
 ### 第 4 步：生成代码 + 自查
 
 生成完成后，快速检查：
-- [ ] 是否有遗留的 `console.log`？
-- [ ] 是否有 `any` 类型？
+- [ ] 字段名是否与接口定义完全一致（大小写敏感）
 - [ ] 是否有未使用的 import 或变量？
-- [ ] 文件名是否符合命名规范？
+- [ ] 是否有 `console.log` 遗留？
+- [ ] 文件名是否符合规范？
 - [ ] 样式是否使用了项目对应的方案？
-- [ ] TypeScript 类型是否正确？
 - [ ] 是否修改了非本次任务的代码？如有，已通知用户
 
 ## 跨项目通用规则（无需读取文件）
 
 - 函数组件 + Hooks，不使用 class 组件
-- TypeScript strict 模式，避免 `any`
+- TypeScript 启用 strict 模式
 - Props 接口定义在组件文件顶部（interface 组件名 + Props）
 - 默认导出组件，命名导出类型
-- useEffect 依赖数组完整
 - 列表 key 使用唯一且稳定的值
 - 使用 try-catch 处理异步错误
 - 本地配置优先，不破坏已有代码
@@ -67,15 +62,11 @@ context: fork
 
 | 文件 | 简述 |
 |------|------|
-| `INDEX.md` | 主入口 + 完整工作流程 |
-| `naming-conventions.md` | 目录/文件/变量/组件命名 |
+| `naming-conventions.md` | 目录命名、文件命名 |
 | `file-organization.md` | 目录结构、文件拆分 |
-| `component-patterns.md` | 函数组件、Props、Hooks |
+| `component-patterns.md` | 组件约束、注释规范 |
 | `import-organization.md` | 导入顺序、路径别名 |
 | `state-management.md` | Dva/RTK/Zustand |
 | `api-requests.md` | 请求封装、错误处理 |
-| `styling.md` | CSS Modules、Less |
-| `typescript.md` | strict 模式、类型 |
-| `comments.md` | JSDoc、TODO |
-| `lint-rules.md` | 代码质量规则 |
-| `new-project-defaults.md` | 新项目默认值 |
+| `styling.md` | CSS Modules、样式方案 |
+| `typescript.md` | tsconfig 配置、类型禁止项 |

@@ -1,79 +1,45 @@
 ---
-description: 前端导入规范、状态管理、API 请求模式
+description: 导入规范、状态管理、API 请求模式
 globs: "*.tsx,*.ts,*.jsx,*.js"
 alwaysApply: false
 ---
 
-# 导入与状态管理 (v1.0.0)
+# 导入与状态管理 (v2.0.0)
 
 ## 导入分组顺序
 
-每组之间空一行，同类按字母序排列：
+每组空一行，同类按字母序：
 
-```tsx
-// 1. 核心库
-import React, { useState } from 'react';
-
-// 2. 第三方 UI 库
-import { Button, Table } from 'antd';
-
-// 3. 第三方工具库
-import classNames from 'classnames';
-
-// 4. 内部别名（@/）
-import { getUserList } from '@/services/userApi';
-
-// 5. 相对路径
-import { StatusTag } from './components/StatusTag';
-
-// 6. 样式
-import styles from './index.less';
-
-// 7. 类型导入
-import type { User } from '@/types';
-```
+1. 核心库（React 等）
+2. 第三方 UI 库（antd 等）
+3. 第三方工具库（ahooks 等）
+4. 内部别名（`@/`）
+5. 相对路径
+6. 样式（`import styles`）
+7. 类型导入（`import type`）
 
 ### 路径别名
-
-- `@/` → `src/`（跨目录引用），同一页面内用相对路径
-- 相对路径不超过 3 层（`../../../`），超过用 `@/`
-- 避免在同一个模块内混用 `@/` 和相对路径指向同一目录
+- `@/` → `src/`，同一页面内用相对路径
+- 相对路径不超过 3 层，超过用 `@/`
 
 ## 状态管理决策
 
 | 状态类型 | 推荐位置 |
 |----------|----------|
 | 表单输入、弹窗显隐、加载状态 | 组件本地 `useState` |
-| 页面筛选条件 | 页面级 state 或自定义 Hook |
 | 用户登录、权限数据 | 全局 store（Dva/RTK/Zustand） |
-| 多页面共享数据 | 提升到全局 |
 
-### 关键约束
-- 就近原则：状态尽量放在需要它的最近层级
-- 不可变性：永远不直接修改 state
-- 不混用多种状态管理方案
-- 不在渲染函数中直接调用状态更新函数
+- 就近原则：状态放在需要它的最近层级
+- 不直接修改 state；不混用多种状态管理方案
 
 ## API 请求模式
 
 ```typescript
 // 统一请求实例 + 拦截器
 const request = axios.create({ baseURL: '/api', timeout: 30000 });
-request.interceptors.response.use(
-  (res) => res.data?.code === 0 ? res.data.data : Promise.reject(res.data.msg),
-  (error) => { /* 401 → 登录页，其他 → 网络错误提示 */ }
-);
-
-// 按模块封装，类型完整
-export function getUserList(params: Params): Promise<PaginatedResponse<UserItem>> {
-  return request.get('/user/list', { params });
-}
+// 响应 code === 0 → data，401 → 登录页，其他 → 错误提示
 ```
 
-### 错误处理链路
-请求发起 → 请求拦截器（添加 token） → 服务端处理 → 响应拦截器
-  ├── code === 0 → 返回 data
-  ├── 401 → 跳转登录
-  └── 网络错误 → 提示重试
-
-每个请求需要有对应的 loading 状态。
+- 按模块封装 API，函数命名 `getXxx/createXxx/updateXxx/deleteXxx`
+- 字段名必须与接口定义完全一致（大小写敏感）
+- 每个请求有对应的 loading 状态

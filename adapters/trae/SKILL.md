@@ -1,8 +1,8 @@
 ---
 name: frontend-standards
-description: 前端编码规范 - 覆盖命名、组件、状态管理、API请求、样式、TypeScript
+description: 前端编码规范 - 覆盖命名、组件、状态管理、API请求、样式、TypeScript、文件组织、导入规范
 category: coding-standards
-version: "1.0.0"
+version: "2.0.0"
 input_schema:
   type: object
   properties: {}
@@ -17,7 +17,7 @@ limitations:
   - 项目本地配置文件优先级高于本规范
 ---
 
-# 前端编码规范 (v1.0.0)
+# 前端编码规范 (v2.0.0)
 
 ## 使用方式
 
@@ -38,28 +38,26 @@ limitations:
 
 | 当前任务 | 需要加载的文件 |
 |----------|---------------|
-| 创建/修改组件 | `component-patterns.md` + `naming-conventions.md` |
+| 创建/修改组件 | `naming-conventions.md` + `component-patterns.md` |
 | 添加 import 语句 | `import-organization.md` |
 | 管理状态 | `state-management.md` |
 | 编写 API 调用 | `api-requests.md` |
 | 编写样式 | `styling.md` |
 | 编写类型定义 | `typescript.md` |
 | 组织文件/目录 | `file-organization.md` |
-| 添加注释 | `comments.md` |
-| 代码重构/审查 | `lint-rules.md` |
-| 创建新项目 | `new-project-defaults.md` |
 
 ### 第 4 步：自查
-- 无遗留 `console.log`、`any` 类型、未使用的 import
+- 字段名是否与接口定义完全一致（大小写敏感）
+- 无遗留 `console.log`、未使用的 import
 - 文件名符合命名规范，样式使用项目对应方案
 - 不修改非目标代码
 
 ## 跨项目通用规则
 
 - 函数组件 + Hooks，不使用 class 组件
-- TypeScript strict 模式，避免 `any`
+- TypeScript strict 模式
 - Props interface 定义在组件文件顶部（组件名 + Props）
 - 默认导出组件，命名导出类型
-- useEffect 依赖数组完整，列表 key 使用唯一值
+- 列表 key 使用唯一值
 - 使用 try-catch 处理异步错误
 - 本地配置优先，不破坏已有代码

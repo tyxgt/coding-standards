@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.0.0 (2026-06-05)
+
+### 移除
+- 删除 `frontend-standards/lint-rules.md`：所有规则为 LLM 默认行为，无实际约束价值
+- 删除 `frontend-standards/new-project-defaults.md`：内容为其他文件的冗余总结
+- 删除 `frontend-standards/comments.md`：核心约束（TODO 格式、JSX 注释）合并入 `component-patterns.md`
+
+### 简化
+- `naming-conventions.md`：清除通用 JS/TS 命名规则，仅保留目录命名、文件命名等项目特有规则
+- `component-patterns.md`：清除通用组件模板，保留大小限制、导出约定、拆分原则，合并注释规范
+- `typescript.md`：清除通用 TypeScript 用法，保留 tsconfig paths、StatusConfig 模式、禁止列表
+- `styling.md`：清除通用 CSS/Less 用法，保留样式方案选择表和项目特有约束
+- `import-organization.md`：清除通用导入语法示例，保留分组顺序和路径别名规则
+- `file-organization.md`：清除各文件类型编写模板，保留目录结构布局和拆分决策
+- `state-management.md`：精简通用状态使用示例，保留 Dva/RTK/Zustand 项目模式
+- `api-requests.md`：精简页面调用示例，保留拦截器模式、字段准确性和模块组织
+
+### 适配器同步
+- 更新所有 5 个适配器（Claude Code、Trae、Cursor、CodeBuddy、Amazon Q）以匹配简化的规范源文件
+- 适配器中的通用规则已移除，仅保留项目特有约束
+
 ## 1.0.0 (2026-06-05)
 
 ### 重构
