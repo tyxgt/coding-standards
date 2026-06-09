@@ -7,6 +7,31 @@
 -->
 # 前端组件编写规范
 
+## 组件设计原则
+
+| 原则 | 说明 |
+|------|------|
+| **单一职责** | 一个组件只做一件事，职责模糊时考虑拆分 |
+| **函数组件优先** | 优先使用函数组件 + Hooks，避免类组件（除非特殊 legacy 需求） |
+| **容器 vs 展示分离** | 容器组件负责数据获取和逻辑，展示组件纯渲染 UI |
+| **条件渲染简洁** | 不使用复杂三元/嵌套，优先提前 return 或使用 `&&` |
+
+```tsx
+// ✅ 容器组件：负责数据和逻辑
+function UserListContainer() {
+  const { data, isLoading, error } = useQuery(...);
+  return <UserList users={data} loading={isLoading} error={error} />;
+}
+
+// ✅ 展示组件：纯渲染 UI
+function UserList({ users, loading, error }: UserListProps) {
+  if (loading) return <Skeleton />;
+  if (error) return <ErrorPage />;
+  if (!users?.length) return <Empty />;
+  return <Table dataSource={users} />;
+}
+```
+
 ## 组件结构顺序
 
 组件内部按以下顺序排列，用空行分隔逻辑块：

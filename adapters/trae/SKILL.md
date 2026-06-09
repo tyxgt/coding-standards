@@ -49,7 +49,8 @@ limitations:
 ### 第 4 步：自查
 - 字段名是否与接口定义完全一致（大小写敏感）
 - 无遗留 `console.log`、未使用的 import
-- 文件名符合命名规范，样式使用项目对应方案
+- 样式是否使用了项目对应的方案（CSS Modules / Tailwind / Less）
+- 是否有静态内联样式（`style={{ }}` 中的固定值），应使用 CSS Modules
 - 不修改非目标代码
 
 ## 跨项目通用规则

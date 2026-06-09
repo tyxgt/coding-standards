@@ -14,6 +14,84 @@
 3. **错误处理统一**：全局统一处理通用错误，页面处理业务错误
 4. **响应类型明确**：API 响应有完整的 TypeScript 类型定义
 5. **字段严格遵循接口定义**：生成代码时字段名必须与用户提供的接口定义完全一致（大小写敏感），不得自行编造、添加、遗漏或修改字段名
+6. **接口层分离**：API 函数定义在独立文件（`services/api/`），组件不直接写 fetch/axios 调用
+7. **服务端数据缓存**：优先使用请求库（React Query / SWR）管理服务端数据的缓存、请求状态和自动刷新
+
+## 接口层分离
+
+API 调用与组件逻辑分离，所有请求函数集中在 `services/api/` 目录下：
+
+```
+src/services/
+├── request.ts              # 统一的请求实例（axios/fetch 封装）
+└── api/
+    ├── userApi.ts           # 用户模块 API
+    ├── orderApi.ts          # 订单模块 API
+    └── dashboardApi.ts      # 仪表盘 API
+```
+
+组件中不直接调用 fetch/axios，而是调用 API 函数：
+
+```tsx
+// ✅ 正确：组件调用 API 函数
+import { getUserList } from '@/services/api/userApi';
+
+function UserListContainer() {
+  const { data, isLoading } = useQuery(['users'], getUserList);
+  return <UserList users={data} loading={isLoading} />;
+}
+
+// ❌ 错误：组件直接写 fetch/axios
+function BadComponent() {
+  const [data, setData] = useState();
+  useEffect(() => {
+    axios.get('/api/user/list').then(res => setData(res.data)); // 禁止
+  }, []);
+}
+```
+
+## 服务端数据管理
+
+服务端数据统一使用请求库管理缓存和请求状态：
+
+### React Query 模式
+
+```tsx
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getUserList, createUser } from '@/services/api/userApi';
+
+function UserListContainer() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: getUserList,
+  });
+
+  const queryClient = useQueryClient();
+  const createMutation = useMutation({
+    mutationFn: createUser,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+  });
+
+  if (isLoading) return <Spin />;
+  if (error) return <ErrorPage />;
+  return <UserList data={data} onCreate={createMutation.mutate} />;
+}
+```
+
+### SWR 模式
+
+```tsx
+import useSWR from 'swr';
+import { getUserList } from '@/services/api/userApi';
+
+function UserListContainer() {
+  const { data, isLoading, error } = useSWR('users', getUserList);
+
+  if (isLoading) return <Spin />;
+  if (error) return <ErrorPage />;
+  return <UserList data={data} />;
+}
+```
 
 ## 请求封装
 

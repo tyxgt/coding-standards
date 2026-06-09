@@ -23,7 +23,7 @@ usage() {
   echo "选项:"
   echo "  --target-dir DIR   目标项目目录 (默认: 当前工作目录)"
   echo "  --tools TOOLS      要安装的工具，逗号分隔 (默认: all)"
-  echo "                     可用: claude-code,cursor,trae,codebuddy,amazon-q"
+  echo "                     可用: claude-code,cursor,trae,codebuddy"
   echo "  --mode MODE        安装模式: copy|symlink (默认: copy)"
   echo "  --ai-rules-path    指定从目标项目到 ai-rules 的路径 (默认: 自动检测)"
   echo "  --help             显示此帮助信息"
@@ -54,7 +54,7 @@ done
 
 # 解析工具列表
 if [ "$TOOLS" = "all" ]; then
-  TOOL_LIST=("claude-code" "cursor" "trae" "codebuddy" "amazon-q")
+  TOOL_LIST=("claude-code" "cursor" "trae" "codebuddy")
 else
   IFS=',' read -ra TOOL_LIST <<< "$TOOLS"
 fi
@@ -102,18 +102,23 @@ install_file() {
 
   mkdir -p "$(dirname "$dst")"
 
-  if [ "$MODE" = "symlink" ]; then
+  if [ -n "$placeholder_path" ]; then
+    # 含 {{AI_RULES_PATH}} 占位符 → 必须 sed 替换路径，无法使用符号链接
+    sed "s|{{AI_RULES_PATH}}|$placeholder_path|g" "$src" > "$dst"
+    echo -e "  ${GREEN}✓ 已创建 (路径替换):${NC} $dst"
+    if [ "$MODE" = "symlink" ]; then
+      echo -e "    ${YELLOW}📌 SKILL.md 含路径占位符 ${placeholder_path}，使用复制模式（符号链接不兼容）${NC}"
+    fi
+  elif [ "$MODE" = "symlink" ]; then
+    # 无占位符 + symlink 模式 → 建立符号链接
     if [ -f "$dst" ] || [ -L "$dst" ]; then
       rm -f "$dst"
     fi
     ln -sf "$src" "$dst"
     echo -e "  ${GREEN}🔗 符号链接:${NC} $dst"
   else
-    if [ -n "$placeholder_path" ]; then
-      sed "s|{{AI_RULES_PATH}}|$placeholder_path|g" "$src" > "$dst"
-    else
-      cp "$src" "$dst"
-    fi
+    # 无占位符 + copy 模式 → 直接复制
+    cp "$src" "$dst"
     echo -e "  ${GREEN}✓ 已创建:${NC} $dst"
   fi
   INSTALLED+=("$dst")
@@ -173,20 +178,6 @@ if [[ " ${TOOL_LIST[*]} " =~ " codebuddy " ]]; then
   echo ""
 fi
 
-# ---- Amazon Q ----
-if [[ " ${TOOL_LIST[*]} " =~ " amazon-q" ]] || [[ " ${TOOL_LIST[*]} " =~ " amazonq" ]]; then
-  echo -e "${YELLOW}[Amazon Q Developer]${NC}"
-  SRC="$AI_RULES_DIR/adapters/amazon-q/frontend-standards.md"
-  DST="$TARGET_DIR/.amazonq/rules/frontend-standards.md"
-  if [ -f "$SRC" ]; then
-    install_file "$SRC" "$DST" ""
-  else
-    echo -e "  ${RED}✗ 模板文件不存在: $SRC${NC}"
-    SKIPPED+=("Amazon Q")
-  fi
-  echo ""
-fi
-
 # ---- 结果汇总 ----
 echo -e "${CYAN}========================================${NC}"
 echo -e "${CYAN}  安装完成${NC}"
@@ -205,12 +196,20 @@ if [ ${#SKIPPED[@]} -gt 0 ]; then
 fi
 
 echo ""
+if [ "$MODE" = "symlink" ]; then
+  echo -e "${GREEN}🔗 符号链接模式说明:${NC}"
+  echo "  - Cursor/CodeBuddy 适配器 → 符号链接，修改 ai-rules 源文件自动同步"
+  echo "  - Claude Code/Trae SKILL.md → 复制（含路径替换），需重新运行安装脚本以同步更新"
+  echo ""
+  echo -e "${YELLOW}更新 SKILL.md 后，重新运行安装:${NC}"
+  echo "  bash $0 --target-dir \"$TARGET_DIR\" --tools claude-code,trae --mode symlink"
+fi
+
 echo -e "提示: 安装完成后，部分工具可能需要重启才能生效。"
 echo "  - Cursor: 新建对话后自动加载"
 echo "  - Claude Code: 立即生效（无需重启）"
 echo "  - Trae: 新建对话后自动加载"
 echo "  - CodeBuddy: 需要新建会话"
-echo "  - Amazon Q: 立即生效"
 echo ""
 echo "编辑规范: 修改 $AI_RULES_DIR/frontend-standards/ 下的文件即可更新规则。"
 echo "更新适配器: 运行 $AI_RULES_DIR/scripts/generate-adapters.sh 重新生成适配器文件。"

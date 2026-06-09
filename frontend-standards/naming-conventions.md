@@ -38,6 +38,64 @@
 - Hook 文件以 `use` 前缀开头
 - 避免缩写，除非是广泛接受的缩写（`API`、`URL`、`ref`）
 
+## 代码命名规范
+
+### 变量与函数
+
+| 类型 | 规范 | 示例 |
+|------|------|------|
+| 普通变量 | camelCase | `userName`、`pageSize`、`isVisible` |
+| 函数 | camelCase | `handleClick()`、`fetchData()`、`formatDate()` |
+| 私有变量/函数 | camelCase + 下划线前缀或后缀 | `_privateVar`、`res_`（不宜滥用） |
+| 常量（字面量） | UPPER_SNAKE_CASE 或 camelCase | `API_BASE_URL` 或 `apiBaseUrl`（根据上下文约定） |
+
+```typescript
+// ✅ 正确
+const userName = 'Alice';
+let currentIndex = 0;
+const API_BASE_URL = 'https://api.example.com';
+
+function fetchUserData(id: string) { ... }
+```
+
+### 类、接口、类型、枚举
+
+| 类型 | 规范 | 示例 |
+|------|------|------|
+| 类 | PascalCase | `class UserService` |
+| 接口 | PascalCase（**禁止** `I` 前缀） | `interface UserProps`（而非 `IUser`） |
+| 类型别名 | PascalCase | `type UserStatus = 'active' \| 'inactive'` |
+| 枚举 | PascalCase（**禁止** `E` 前缀） | `enum OrderStatus`（而非 `EOrderStatus`） |
+| 枚举成员 | PascalCase | `OrderStatus.Pending`、`OrderStatus.Completed` |
+
+```typescript
+// ✅ 正确
+interface UserProfileProps { ... }     // 无 I 前缀
+enum ThemeMode { Light, Dark }         // 无 E 前缀
+type ApiResponse<T> = { code: number; data: T };
+
+// ❌ 错误
+interface IUser { ... }                // 禁止 I 前缀
+enum EStatus { Active, Inactive }      // 禁止 E 前缀
+```
+
+### 泛型参数
+
+| 场景 | 规范 | 示例 |
+|------|------|------|
+| 单个泛型参数 | 单个大写字母 | `<T>`、`<K>`、`<V>` |
+| 多个或有明确含义 | PascalCase | `<TData>`、`<TResponse>`、`<TEntity>` |
+| 前缀约束 | 禁止 `I`/`E` 前缀 | `TData`（而非 `IData` 或 `EData`） |
+
+```typescript
+// ✅ 正确
+function identity<T>(arg: T): T { return arg; }
+function fetchItems<TResponse>(url: string): Promise<TResponse> { ... }
+
+// ❌ 错误
+function identity<IData>(arg: IData): IData { return arg; }
+```
+
 ## 页面目录结构
 
 ```

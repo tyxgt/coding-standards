@@ -18,7 +18,7 @@
 - `api-requests.md`：精简页面调用示例，保留拦截器模式、字段准确性和模块组织
 
 ### 适配器同步
-- 更新所有 5 个适配器（Claude Code、Trae、Cursor、CodeBuddy、Amazon Q）以匹配简化的规范源文件
+- 更新所有 4 个适配器（Claude Code、Trae、Cursor、CodeBuddy）以匹配简化的规范源文件
 - 适配器中的通用规则已移除，仅保留项目特有约束
 
 ## 1.0.0 (2026-06-05)
@@ -36,7 +36,6 @@
   - `adapters/cursor/*.mdc` — Cursor 规则文件
   - `adapters/trae/SKILL.md` — Trae Skill 入口
   - `adapters/codebuddy/frontend-standards.md` — CodeBuddy 规则
-  - `adapters/amazon-q/frontend-standards.md` — Amazon Q Developer 规则
 - `scripts/install.sh` — 一键安装到目标项目
 - `scripts/generate-adapters.sh` — 从规范源重新生成适配器
 
