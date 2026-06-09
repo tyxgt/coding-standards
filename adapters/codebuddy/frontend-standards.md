@@ -27,7 +27,7 @@ updatedAt: "2026-06-05"
 - 不直接修改 state，不混用方案
 
 ## 样式
-- CSS Modules 优先，camelCase 命名
+- CSS Modules 优先，camelCase 命名（`styles.container` ✅，禁止 `styles['kebab-case']` ❌）
 - Umi → Less + CSS Modules，Vite → CSS Modules/Tailwind
 - 禁止内联静态样式、!important，选择器嵌套 ≤ 3 层
 

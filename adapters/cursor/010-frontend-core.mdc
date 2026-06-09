@@ -25,7 +25,7 @@ alwaysApply: true
 
 | 类别 | 规范 |
 |------|------|
-| 组件样式 | CSS Modules，camelCase 命名 |
+| 组件样式 | CSS Modules，camelCase 命名（`styles.container` ✅，`styles['kebab-case']` ❌） |
 | 全局样式 | kebab-case，放 global.less |
 | 方案选择 | Umi → Less + CSS Modules，Vite → CSS Modules/Tailwind |
 | 选择器嵌套 | ≤ 3 层 |

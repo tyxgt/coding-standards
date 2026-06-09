@@ -36,7 +36,7 @@
 
 | 类别 | 规范 |
 |------|------|
-| 组件样式 | CSS Modules，camelCase 命名（`styles.container`） |
+| 组件样式 | CSS Modules，camelCase 命名（`styles.container` ✅，`styles['kebab-case-name']` ❌） |
 | 全局样式 | kebab-case 命名，放 `global.less` |
 | 内联样式 | **禁止固定值**，只允许引用变量（`style={{ top: offsetY }}` ✅，`style={{ marginRight: 8 }}` ❌） |
 | 颜色值 | 使用变量（Less 变量或 CSS 变量） |
@@ -111,6 +111,9 @@ CSS Modules 中顶层使用 `:global` 会污染全局命名空间，必须嵌套
 import styles from './index.less';
 <div className={styles.container} />
 
+// ❌ 组件样式：禁止 kebab-case + bracket 语法
+<div className={styles['container-name']} />
+
 // ✅ 全局样式：使用字符串 className
 <div className="page-container" />
 ```
@@ -119,6 +122,7 @@ import styles from './index.less';
 
 - ❌ 使用内联样式写静态样式（`style={{ color: 'red' }}`、`style={{ marginRight: 8 }}`）
 - ❌ 在 JSX 中直接用 `className="xxx"` 引用非全局样式
+- ❌ 使用 kebab-case + bracket 语法引用 CSS Modules（`styles['kebab-case-name']`），应使用 camelCase（`styles.kebabCaseName`）
 - ❌ 引入项目未使用的样式方案（如 Less 项目改 CSS Modules、普通 CSS 项目引入 Tailwind）
 - ❌ 改写已有样式代码（除非任务明确要求重构）
 - ❌ 使用 `!important`
