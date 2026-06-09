@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ==============================================================
-# ai-rules 适配器同步验证脚本
+# coding-standards 适配器同步验证脚本
 # 验证各工具适配器是否与 canonical 规范源保持同步。
 # 在修改 frontend-standards/ 下的规范后运行此脚本检查一致性。
 #
@@ -12,7 +12,7 @@ set -euo pipefail
 # ==============================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-AI_RULES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+CODING_STANDARDS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 FIX_MODE=false
 
 if [[ "${1:-}" == "--fix" ]]; then
@@ -75,11 +75,11 @@ check_rule() {
 # 适配器列表
 # ==============================================================
 
-ADAPTER_DIR="$AI_RULES_DIR/adapters"
-FRONTEND_DIR="$AI_RULES_DIR/frontend-standards"
+ADAPTER_DIR="$CODING_STANDARDS_DIR/adapters"
+FRONTEND_DIR="$CODING_STANDARDS_DIR/frontend-standards"
 
 echo -e "${CYAN}========================================${NC}"
-echo -e "${CYAN}  ai-rules 适配器同步验证${NC}"
+echo -e "${CYAN}  coding-standards 适配器同步验证${NC}"
 echo -e "${CYAN}================================${NC}"
 echo ""
 echo -e "规范源目录: ${FRONTEND_DIR}"
@@ -95,7 +95,7 @@ echo ""
 
 check_source_freshness() {
   local source_file="$1"
-  local adapter_file="$AI_RULES_DIR/$2"
+  local adapter_file="$CODING_STANDARDS_DIR/$2"
 
   if [ -f "$source_file" ] && [ -f "$adapter_file" ]; then
     echo -e "  $(basename "$source_file") → $2"
@@ -107,7 +107,7 @@ check_source_freshness() {
 # 重新组织：对每个适配器，检查相关的所有 source 文件
 for adapter_rel in "adapters/cursor/010-frontend-core.mdc" "adapters/cursor/020-frontend-imports-state.mdc" "adapters/codebuddy/frontend-standards.md"; do
   echo -e "  ${CYAN}$adapter_rel${NC}"
-  adapter_file="$AI_RULES_DIR/$adapter_rel"
+  adapter_file="$CODING_STANDARDS_DIR/$adapter_rel"
   if [ ! -f "$adapter_file" ]; then
     echo -e "  ${RED}✗ 文件不存在${NC}"
     echo ""

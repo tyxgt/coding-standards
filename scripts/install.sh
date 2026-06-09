@@ -2,12 +2,12 @@
 set -euo pipefail
 
 # ==============================================================
-# ai-rules 多工具适配器安装脚本
+# coding-standards 多工具适配器安装脚本
 # 将前端编码规范安装到目标项目的各工具配置目录中
 # ==============================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-AI_RULES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+CODING_STANDARDS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -18,14 +18,14 @@ NC='\033[0m' # No Color
 usage() {
   echo "用法: $0 [选项]"
   echo ""
-  echo "将 ai-rules 前端编码规范安装到目标项目中。"
+  echo "将 coding-standards 前端编码规范安装到目标项目中。"
   echo ""
   echo "选项:"
   echo "  --target-dir DIR   目标项目目录 (默认: 当前工作目录)"
   echo "  --tools TOOLS      要安装的工具，逗号分隔 (默认: all)"
   echo "                     可用: claude-code,cursor,trae,codebuddy"
   echo "  --mode MODE        安装模式: copy|symlink (默认: copy)"
-  echo "  --ai-rules-path    指定从目标项目到 ai-rules 的路径 (默认: 自动检测)"
+  echo "  --coding-standards-path    指定从目标项目到 coding-standards 的路径 (默认: 自动检测)"
   echo "  --help             显示此帮助信息"
   echo ""
   echo "示例:"
@@ -39,14 +39,14 @@ usage() {
 TARGET_DIR="${PWD}"
 TOOLS="all"
 MODE="copy"
-AI_RULES_REL_PATH=""
+CODING_STANDARDS_REL_PATH=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --target-dir) TARGET_DIR="$2"; shift 2 ;;
     --tools) TOOLS="$2"; shift 2 ;;
     --mode) MODE="$2"; shift 2 ;;
-    --ai-rules-path) AI_RULES_REL_PATH="$2"; shift 2 ;;
+    --coding-standards-path) CODING_STANDARDS_REL_PATH="$2"; shift 2 ;;
     --help) usage ;;
     *) echo "未知选项: $1"; usage ;;
   esac
@@ -65,29 +65,29 @@ if [ ! -d "$TARGET_DIR" ]; then
   exit 1
 fi
 
-if [ "$TARGET_DIR" = "$AI_RULES_DIR" ]; then
-  echo -e "${RED}错误: 目标目录不能是 ai-rules 项目目录本身${NC}"
+if [ "$TARGET_DIR" = "$CODING_STANDARDS_DIR" ]; then
+  echo -e "${RED}错误: 目标目录不能是 coding-standards 项目目录本身${NC}"
   echo "请指定要安装到的前端项目目录。"
   exit 1
 fi
 
-# 计算 ai-rules 相对路径
-if [ -z "$AI_RULES_REL_PATH" ]; then
-  AI_RULES_REL_PATH="$(realpath --relative-to="$TARGET_DIR" "$AI_RULES_DIR" 2>/dev/null || echo "")"
-  if [ -z "$AI_RULES_REL_PATH" ]; then
+# 计算 coding-standards 相对路径
+if [ -z "$CODING_STANDARDS_REL_PATH" ]; then
+  CODING_STANDARDS_REL_PATH="$(realpath --relative-to="$TARGET_DIR" "$CODING_STANDARDS_DIR" 2>/dev/null || echo "")"
+  if [ -z "$CODING_STANDARDS_REL_PATH" ]; then
     # macOS 没有 realpath --relative-to
-    AI_RULES_REL_PATH="ai-rules"
-    echo -e "${YELLOW}⚠ 无法计算相对路径，使用默认值: $AI_RULES_REL_PATH${NC}"
+    CODING_STANDARDS_REL_PATH="coding-standards"
+    echo -e "${YELLOW}⚠ 无法计算相对路径，使用默认值: $CODING_STANDARDS_REL_PATH${NC}"
   fi
 fi
 
 echo -e "${CYAN}========================================${NC}"
-echo -e "${CYAN}  ai-rules 安装脚本${NC}"
+echo -e "${CYAN}  coding-standards 安装脚本${NC}"
 echo -e "${CYAN}========================================${NC}"
 echo ""
 echo "  目标项目:   $TARGET_DIR"
-echo "  ai-rules:   $AI_RULES_DIR"
-echo "  相对路径:   $AI_RULES_REL_PATH"
+echo "  coding-standards:   $CODING_STANDARDS_DIR"
+echo "  相对路径:   $CODING_STANDARDS_REL_PATH"
 echo "  工具:       ${TOOLS}"
 echo "  模式:       $MODE"
 echo ""
@@ -103,8 +103,8 @@ install_file() {
   mkdir -p "$(dirname "$dst")"
 
   if [ -n "$placeholder_path" ]; then
-    # 含 {{AI_RULES_PATH}} 占位符 → 必须 sed 替换路径，无法使用符号链接
-    sed "s|{{AI_RULES_PATH}}|$placeholder_path|g" "$src" > "$dst"
+    # 含 {{CODING_STANDARDS_PATH}} 占位符 → 必须 sed 替换路径，无法使用符号链接
+    sed "s|{{CODING_STANDARDS_PATH}}|$placeholder_path|g" "$src" > "$dst"
     echo -e "  ${GREEN}✓ 已创建 (路径替换):${NC} $dst"
     if [ "$MODE" = "symlink" ]; then
       echo -e "    ${YELLOW}📌 SKILL.md 含路径占位符 ${placeholder_path}，使用复制模式（符号链接不兼容）${NC}"
@@ -127,10 +127,10 @@ install_file() {
 # ---- Claude Code ----
 if [[ " ${TOOL_LIST[*]} " =~ " claude-code " ]]; then
   echo -e "${YELLOW}[Claude Code]${NC}"
-  SRC="$AI_RULES_DIR/adapters/claude-code/SKILL.md"
+  SRC="$CODING_STANDARDS_DIR/adapters/claude-code/SKILL.md"
   DST="$TARGET_DIR/.claude/skills/frontend-standards/SKILL.md"
   if [ -f "$SRC" ]; then
-    install_file "$SRC" "$DST" "$AI_RULES_REL_PATH"
+    install_file "$SRC" "$DST" "$CODING_STANDARDS_REL_PATH"
   else
     echo -e "  ${RED}✗ SKILL.md 模板文件不存在: $SRC${NC}"
     SKIPPED+=("Claude Code")
@@ -141,7 +141,7 @@ fi
 # ---- Cursor ----
 if [[ " ${TOOL_LIST[*]} " =~ " cursor " ]]; then
   echo -e "${YELLOW}[Cursor]${NC}"
-  for f in "$AI_RULES_DIR"/adapters/cursor/*.mdc; do
+  for f in "$CODING_STANDARDS_DIR"/adapters/cursor/*.mdc; do
     if [ -f "$f" ]; then
       DST="$TARGET_DIR/.cursor/rules/$(basename "$f")"
       install_file "$f" "$DST" ""
@@ -153,21 +153,34 @@ fi
 # ---- Trae ----
 if [[ " ${TOOL_LIST[*]} " =~ " trae " ]]; then
   echo -e "${YELLOW}[Trae]${NC}"
-  SRC="$AI_RULES_DIR/adapters/trae/SKILL.md"
+
+  # 1. 安装 Skill（按需匹配触发）
+  SRC="$CODING_STANDARDS_DIR/adapters/trae/SKILL.md"
   DST="$TARGET_DIR/.trae/skills/frontend-standards/SKILL.md"
   if [ -f "$SRC" ]; then
-    install_file "$SRC" "$DST" "$AI_RULES_REL_PATH"
+    install_file "$SRC" "$DST" "$CODING_STANDARDS_REL_PATH"
   else
     echo -e "  ${RED}✗ SKILL.md 模板文件不存在: $SRC${NC}"
-    SKIPPED+=("Trae")
+    SKIPPED+=("Trae (skill)")
   fi
+
+  # 2. 安装 Rule（alwaysApply，始终生效）
+  RULE_SRC="$CODING_STANDARDS_DIR/adapters/trae/rules/frontend-standards.md"
+  RULE_DST="$TARGET_DIR/.trae/rules/frontend-standards.md"
+  if [ -f "$RULE_SRC" ]; then
+    install_file "$RULE_SRC" "$RULE_DST" "$CODING_STANDARDS_REL_PATH"
+  else
+    echo -e "  ${RED}✗ Rule 模板文件不存在: $RULE_SRC${NC}"
+    SKIPPED+=("Trae (rule)")
+  fi
+
   echo ""
 fi
 
 # ---- CodeBuddy ----
 if [[ " ${TOOL_LIST[*]} " =~ " codebuddy " ]]; then
   echo -e "${YELLOW}[CodeBuddy]${NC}"
-  SRC="$AI_RULES_DIR/adapters/codebuddy/frontend-standards.md"
+  SRC="$CODING_STANDARDS_DIR/adapters/codebuddy/frontend-standards.md"
   DST="$TARGET_DIR/.codebuddy/rules/frontend-standards.md"
   if [ -f "$SRC" ]; then
     install_file "$SRC" "$DST" ""
@@ -198,7 +211,7 @@ fi
 echo ""
 if [ "$MODE" = "symlink" ]; then
   echo -e "${GREEN}🔗 符号链接模式说明:${NC}"
-  echo "  - Cursor/CodeBuddy 适配器 → 符号链接，修改 ai-rules 源文件自动同步"
+  echo "  - Cursor/CodeBuddy 适配器 → 符号链接，修改 coding-standards 源文件自动同步"
   echo "  - Claude Code/Trae SKILL.md → 复制（含路径替换），需重新运行安装脚本以同步更新"
   echo ""
   echo -e "${YELLOW}更新 SKILL.md 后，重新运行安装:${NC}"
@@ -211,5 +224,5 @@ echo "  - Claude Code: 立即生效（无需重启）"
 echo "  - Trae: 新建对话后自动加载"
 echo "  - CodeBuddy: 需要新建会话"
 echo ""
-echo "编辑规范: 修改 $AI_RULES_DIR/frontend-standards/ 下的文件即可更新规则。"
-echo "更新适配器: 运行 $AI_RULES_DIR/scripts/generate-adapters.sh 重新生成适配器文件。"
+echo "编辑规范: 修改 $CODING_STANDARDS_DIR/frontend-standards/ 下的文件即可更新规则。"
+echo "更新适配器: 运行 $CODING_STANDARDS_DIR/scripts/generate-adapters.sh 重新生成适配器文件。"

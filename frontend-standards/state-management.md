@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: state
 @summary: Dva/ReduxToolkit/Zustand模式、状态层级决策、本地状态规范
+@trigger:
+  - 使用 useState 或状态管理库
+  - 管理组件或全局状态
+  - 配置 Dva/RTK/Zustand
 -->
 # 状态管理规范
 

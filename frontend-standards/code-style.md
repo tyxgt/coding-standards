@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-08
 @category: code-style
 @summary: 基础格式、变量声明、运算符、函数复杂度、注释、调试、可访问性
+@trigger:
+  - 代码格式化检查
+  - Review 代码风格
+  - 编写注释或调试代码
 -->
 
 # 代码风格规范

@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: typescript
 @summary: tsconfig paths配置、StatusConfig映射模式、禁止列表
+@trigger:
+  - 编写 interface 或 type 定义
+  - 使用泛型或类型断言
+  - 配置 TypeScript 类型检查
 -->
 
 # TypeScript 规范

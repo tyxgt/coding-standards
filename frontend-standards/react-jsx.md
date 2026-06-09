@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-08
 @category: react-jsx
 @summary: React 组件、JSX 格式、Hooks 规则、条件渲染
+@trigger:
+  - 编写 JSX 代码
+  - 使用 useState/useEffect 等 Hooks
+  - 实现条件渲染或列表渲染
 -->
 
 # React & JSX 规范

@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: styling
 @summary: 样式方案选择、核心约束、禁止事项
+@trigger:
+  - 编写或修改 CSS/Less 样式
+  - 使用 Tailwind CSS
+  - 定义组件样式模块
 -->
 
 # 前端样式规范

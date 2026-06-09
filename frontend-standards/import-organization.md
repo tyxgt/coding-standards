@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: import
 @summary: 导入分组顺序、路径别名、相对路径限制
+@trigger:
+  - 添加或修改 import 语句
+  - 使用路径别名（@/）
+  - 整理或重构导入顺序
 -->
 # 前端导入规范
 

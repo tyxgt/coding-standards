@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: naming
 @summary: 目录命名、文件命名规范
+@trigger:
+  - 创建组件、页面文件
+  - 重命名文件或目录
+  - 定义变量、函数、类型名称
 -->
 # 前端命名规范
 

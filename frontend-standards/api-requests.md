@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: api
 @summary: 请求封装(axios)、按模块定义API、错误处理拦截器、字段准确性
+@trigger:
+  - 编写 API 请求接口
+  - 封装 axios 或请求工具
+  - 处理请求错误或响应拦截
 -->
 # API 请求规范
 

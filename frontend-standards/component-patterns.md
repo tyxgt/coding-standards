@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: component
 @summary: 组件大小限制、导出约定、拆分原则、注释规范
+@trigger:
+  - 创建新的 React 组件
+  - 修改组件结构或 Props
+  - 决定组件是否需要拆分
 -->
 # 前端组件编写规范
 
@@ -95,4 +99,81 @@ JSX 中使用 `{/* */}` 语法，不使用 `//`（会渲染到页面）。
 
 ```typescript
 // @ts-expect-error: 该类型来自后端 API，运行时保证存在该字段
+```
+
+## 组件拆分决策树
+
+```
+组件是否需要拆分？
+│
+├── 渲染内容 > 100 行？
+│   └── 是 → 拆分为容器组件 + 展示组件
+│
+├── useState > 4 个 或 useEffect > 3 个？
+│   └── 是 → 将相关状态和逻辑拆分为自定义 Hook 或子组件
+│
+├── 职责是否模糊（组件名含 "And"）？
+│   └── 是 → 拆分为多个单一职责组件
+│
+├── 某部分 UI 在 2+ 地方复用？
+│   └── 是 → 拆分为可复用组件
+│
+└── Props > 8 个？
+    └── 是 → 考虑拆分Props（将相关props提取为对象或拆分组件）
+```
+
+## 好/坏代码对比
+
+### 1. Props 传递层级过深
+
+```tsx
+// ❌ 不好：Props 逐级传递（Prop Drilling）
+function App() {
+  const [user, setUser] = useState(...);
+  return <Layout user={user} onUpdateUser={setUser} />;
+}
+function Layout({ user, onUpdateUser }) {
+  return <Sidebar user={user} onUpdateUser={onUpdateUser} />;
+}
+function Sidebar({ user, onUpdateUser }) {
+  return <UserProfile user={user} onUpdateUser={onUpdateUser} />;
+}
+
+// ✅ 好：使用 Context 或状态管理
+const UserContext = createContext(...);
+function App() {
+  return <UserProvider><Layout /></UserProvider></UserProvider>;
+}
+```
+
+### 2. 条件渲染嵌套过深
+
+```tsx
+// ❌ 不好：嵌套三元表达式
+return (
+  <div>
+    {user ? (user.isActive ? <ActiveUser user={user} /> : <InactiveUser />) : <Loading />}
+  </div>
+);
+
+// ✅ 好：提前 return 或使用逻辑运算符
+if (!user) return <Loading />;
+if (!user.isActive) return <InactiveUser />;
+return <ActiveUser user={user} />;
+```
+
+### 3. 副作用未清理
+
+```tsx
+// ❌ 不好：useEffect 未清理副作用
+useEffect(() => {
+  const timer = setInterval(() => fetchData(), 5000);
+  // 缺少 return cleanup
+}, []);
+
+// ✅ 好：useEffect 返回清理函数
+useEffect(() => {
+  const timer = setInterval(() => fetchData(), 5000);
+  return () => clearInterval(timer);
+}, []);
 ```

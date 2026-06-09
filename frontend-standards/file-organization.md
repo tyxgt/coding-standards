@@ -1,9 +1,13 @@
 <!--
-@ai-rules
+@coding-standards
 @version: 2.0.0
 @last-updated: 2026-06-05
 @category: file-organization
 @summary: 目录结构、文件拆分决策、组件/文件位置原则
+@trigger:
+  - 设计项目目录结构
+  - 拆分或合并文件
+  - 决定文件放置位置
 -->
 
 # 前端文件组织规范
