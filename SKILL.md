@@ -1,8 +1,6 @@
 ---
 name: coding-standards
-description: >
-  前端编码规范。在创建 React 组件、实现页面、编写 TypeScript/JSX、设计前端方案、审查代码时，
-  按约束生成符合项目规范的代码（命名、目录结构、组件模式、导入顺序、样式方案、状态管理、API 请求等）。
+description: "前端编码规范。创建 React 组件、编写 TypeScript/JSX、设计前端方案、审查代码时按约束生成符合项目规范的代码。"
 when_to_use: >
   适用于以下场景，应在执行前读取规范文件：
   - 创建或修改 React 组件、页面、Hooks
