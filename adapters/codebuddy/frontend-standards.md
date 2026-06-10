@@ -28,8 +28,12 @@ updatedAt: "2026-06-05"
 
 ## 样式
 - CSS Modules 优先，camelCase 命名（`styles.container` ✅，禁止 `styles['kebab-case']` ❌）
-- Umi → Less + CSS Modules，Vite → CSS Modules/Tailwind
-- 禁止内联静态样式、!important，选择器嵌套 ≤ 3 层
+  - 使用 Tailwind CSS
+| 项目已有 Tailwind（`tailwind.config.*`） | 使用 Tailwind class 写法 |
+| 项目使用普通 CSS（无上述配置） | 继续用普通 CSS，不引入 CSS Modules / Tailwind / 预处理器 |
+| 选择器嵌套 | 不超过 3 层 |
+| `!important` | 禁止使用（除非覆盖第三方库） |
+- ❌ 引入项目未使用的样式方案（如 Less 项目改 CSS Modules、普通 CSS 项目引入 Tailwind）
 
 ## TypeScript
 - Props 用 `interface`，联合类型用 `type`

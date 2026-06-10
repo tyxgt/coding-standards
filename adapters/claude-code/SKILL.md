@@ -1,10 +1,15 @@
 ---
 name: coding-standards
-description: 确保前端代码遵循编码规范和最佳实践。在开始前端开发、实现新功能或编写任何 React/TypeScript 代码之前调用。
+description: >
+  前端编码规范。在创建 React 组件、实现页面、编写 TypeScript/JSX、设计前端方案、审查代码时，
+  按约束生成符合项目规范的代码（命名、目录结构、组件模式、导入顺序、样式方案、状态管理、API 请求等）。
 when_to_use: >
-  🔴 强制前置：只要是**前端实现需求**（方案设计、编码实现、代码审查），
-  就必须在 Plan 阶段和编码开始前第一时间调用本 skill，不要先做其他操作。
-context: fork
+  适用于以下场景，应在执行前读取规范文件：
+  - 创建或修改 React 组件、页面、Hooks
+  - 编写 TypeScript 类型定义、API 调用、状态管理
+  - 设计前端架构方案、目录结构、组件拆分
+  - 审查/Review 前端代码是否符合规范
+  - 编写样式、导入语句等细节代码
 ---
 
 # 前端编码规范 (v2.0.0)
@@ -25,9 +30,26 @@ context: fork
 
 同时判断当前工作阶段，后续步骤将按阶段加载对应规则：
 
-- **方案 / Propose 阶段**：关注架构层面规则，在第 4 步按任务加载（文件组织、组件拆分、状态管理、API、命名）
+- **方案设计阶段**：当用户请求涉及"设计"、"方案"、"架构"、"Propose"时，按下方方案设计阶段规则执行
 - **编码阶段**：在第 4 步按任务表加载对应的规范文件
 - **Review 阶段**：在第 4 步加载代码质量类规则（代码风格、TypeScript、React/JSX）
+
+#### 方案设计阶段
+
+当用户请求为方案性需求时：
+
+1. **只加载架构相关规范文件**：
+   - `naming-conventions.md`（命名约定）— @trigger: 重命名文件或目录、定义命名
+   - `file-organization.md`（目录结构、文件拆分）— @trigger: 设计项目目录结构、拆分文件
+   - `component-patterns.md`（组件拆分原则、大小限制）— @trigger: 决定组件是否拆分
+   - `state-management.md`（状态管理模式选择）— @trigger: 配置状态管理方案
+   - `api-requests.md`（API 模块组织）— @trigger: 封装请求工具
+
+2. **方案中必须注明每项设计决策的规范依据**（如"按 file-organization.md 约定，页面组件放在 pages/ 目录"）
+
+3. **方案交付物**应包括：目录结构图、组件树、状态管理方案、API 接口设计、命名约定说明
+
+4. 完成方案后，跳转到第 6 步输出结果，**不需要执行代码生成步骤**
 
 ### 第 2 步：检查本地配置
 
@@ -50,36 +72,52 @@ context: fork
 
 | 当前任务 | 需要加载的文件 |
 |----------|---------------|
-| 创建/修改组件 | `naming-conventions.md` → `component-patterns.md` → `react-jsx.md` |
-| 编写组件逻辑/JSX | `react-jsx.md` |
-| 添加 import 语句 | `import-organization.md` |
-| 管理状态 | `state-management.md` |
-| 编写 API 调用 | `api-requests.md` |
-| 编写样式 | `styling.md` |
-| 编写类型定义 | `typescript.md` |
-| 组织文件/目录 | `file-organization.md` |
-| 代码格式/风格 | `code-style.md` |
+| 创建/修改组件 [T1] | `naming-conventions.md` → `component-patterns.md` → `react-jsx.md` |
+| 编写组件逻辑/JSX [T2] | `react-jsx.md` |
+| 添加 import 语句 [T3] | `import-organization.md` |
+| 管理状态 [T4] | `state-management.md` |
+| 编写 API 调用 [T5] | `api-requests.md` |
+| 编写样式 [T6] | `styling.md` |
+| 编写类型定义 [T7] | `typescript.md` |
+| 组织文件/目录 [T8] | `file-organization.md` |
+| 代码格式/风格 [T9] | `code-style.md` |
+
+> **任务-规范映射依据**（对应规范文件 `@trigger` 元数据）：
+> - [T1] → naming:「创建组件、页面文件」；component:「创建新的 React 组件」；react:「编写 JSX 代码」
+> - [T2] → react:「编写 JSX 代码、使用 Hooks」
+> - [T3] → import:「添加或修改 import 语句」
+> - [T4] → state:「使用 useState 或状态管理库」
+> - [T5] → api:「编写 API 请求接口」
+> - [T6] → styling:「编写或修改 CSS/Less 样式」
+> - [T7] → ts:「编写 interface 或 type 定义」
+> - [T8] → file:「设计项目目录结构」
+> - [T9] → code-style:「代码格式化检查、Review 代码风格」 |
 
 > 当需要加载多个文件时，按上表中从左到右的顺序（`→` 分隔）依次读取。 
 
-### 第 5 步：生成代码 + 自查（fork 子 agent 执行）
+### 第 5 步：生成代码
 
-此步骤在 **fork 出的子 agent** 中执行，子 agent 拥有独立的上下文窗口，可使用 `Read`、`Write`、`Edit` 等工具完成代码修改。
+根据第 4 步加载的规范文件生成代码。如果代码修改量较大，可使用 `Agent` 工具在独立上下文中生成，避免规范文件占用过多上下文空间。
 
-完成后自查：
+生成完成后立即执行自查清单：
 
 - [ ] 字段名是否与接口定义完全一致（大小写敏感）
-- [ ] 是否有未使用的 import 或变量？
-- [ ] 是否有 `console.log` 或 `debugger` 遗留？
-- [ ] 是否有 TODO/FIXME/HACK 注释应处理？
-- [ ] 文件名是否符合 `naming-conventions.md`？
-- [ ] 样式是否使用了项目对应的方案（CSS Modules / Tailwind / Less）？
-- [ ] 是否有静态内联样式（`style={{ }}` 中的固定值）？应提取到 CSS Modules
-- [ ] CSS Modules 是否使用了 camelCase 命名（`styles.container` ✅，而非 `styles['kebab-case']` ❌）？
+- [ ] 是否有未使用的 import 或变量、`console.log`/`debugger`？
+- [ ] 文件名和目录名是否符合命名规范？
+- [ ] 样式是否使用了项目对应的方案（CSS Modules / Tailwind / Less）？是否有静态内联样式？
 - [ ] import 分组顺序是否正确（核心库 → UI 库 → 工具库 → `@/` → 相对路径 → 样式 → 类型）？
-- [ ] 是否使用了禁止的 TypeScript 语法（`any`、`@ts-ignore`、`!` 非空断言、`Function` 类型）？
+- [ ] 是否使用了禁止的 TS 语法（`any`、`@ts-ignore`、`!` 非空断言、`Function` 类型）？
 - [ ] 状态是否放在了正确的层级（就近原则）？
 - [ ] 是否修改了非本次任务的代码？如有，向用户说明
+
+### 代码生成后的合规检查
+
+代码修改完成后，**必须执行以下操作**：
+
+1. **Review 修改的文件**：重新读取修改过的文件，对照 Step 4 加载的规范逐条检查
+2. **运行自查清单**：执行上方的自查清单
+3. **交叉检查**：如果修改了多个文件，检查文件之间的接口、类型、props 是否一致
+4. **输出规范遵守情况**：在下一步中说明应用了哪些规范、是否符合预期
 
 ### 第 6 步：输出结果
 

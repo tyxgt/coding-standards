@@ -10,33 +10,47 @@ alwaysApply: true
 
 | 类型 | 规范 | 示例 |
 |------|------|------|
-| 页面目录 | PascalCase | `AlgorithmConfig/` |
-| 组件目录 | camelCase | `formItem/` |
-| 文件入口 | `index.tsx` | 每个组件/页面目录 |
-| Hook 文件 | `useXxx.ts` | `useAuth.ts` |
+| 页面目录 | PascalCase | `AlgorithmConfig/`、`DecisionFlows/` |
+| 组件/布局/工具目录 | camelCase | `formItem/`、`leftMenu/`、`basicLayout/`、`utils/` |
+| 类型定义目录 | 项目已有风格 | `types/` 或 `typings/` |
+| 页面/组件入口 | `index.tsx` | `pages/AlgorithmConfig/index.tsx` |
+| 样式文件 | `index.less` 或 `index.css` | 与组件同目录 |
+| 类型定义 | `types.ts` | `pages/AlgorithmConfig/types.ts` |
+| 工具函数 | `utils.ts` | `pages/AlgorithmConfig/utils.ts` |
+| 表格列配置 | `columns.tsx` | `pages/AlgorithmConfig/columns.tsx` |
+| 子页面组件 | 按组件用途命名 | `DetailModal.tsx`、`EditForm.tsx` |
+| React Hook | `useXxx.ts` | `useAuth.ts`、`usePagination.ts` |
 
 ## 组件约束
 
-- 单文件 ≤ 300 行，Props ≤ 8 个，useEffect ≤ 4 个
+| **条件渲染简洁** | 不使用复杂三元/嵌套，优先提前 return 或使用 `&&` |
+| 单文件最大行数 | ≤ 300 行 |
+| 单组件 Props 数量 | ≤ 8 个（过多考虑拆分） |
+| 单组件 useEffect 数量 | ≤ 4 个（过多考虑拆分逻辑） |
 - 结构顺序：Props 类型 → 组件 → state → effect → 事件 → 渲染
-- 默认导出组件，命名导出类型
+- **默认导出**组件本身
+- **命名导出**辅助类型（Props 类型、关联类型）
 
 ## 样式规范
 
 | 类别 | 规范 |
 |------|------|
-| 组件样式 | CSS Modules，camelCase 命名（`styles.container` ✅，`styles['kebab-case']` ❌） |
-| 全局样式 | kebab-case，放 global.less |
-| 方案选择 | Umi → Less + CSS Modules，Vite → CSS Modules/Tailwind |
-| 选择器嵌套 | ≤ 3 层 |
-| !important | 禁止使用 |
+| 项目已有 CSS Modules（含 `*.module.less` / `*.module.css`） | 沿用 CSS Modules，使用已有 patterns |
+| 项目使用普通 CSS（无上述配置） | 继续用普通 CSS，不引入 CSS Modules / Tailwind / 预处理器 |
+| 组件样式 | CSS Modules，camelCase 命名（`styles.container` ✅，`styles['kebab-case-name']` ❌） |
+| 全局样式 | kebab-case 命名，放 `global.less` |
+| 选择器嵌套 | 不超过 3 层 |
+| `!important` | 禁止使用（除非覆盖第三方库） |
 
 ## TypeScript
 
-- Props 定义用 `interface`，联合类型用 `type`
-- `import type` 用于类型导入
-- 禁止 `@ts-ignore`（用 `@ts-expect-error` + 注释）
-- 禁止 `!` 非空断言，禁止 `Function` 类型
+- Props 定义用 interface，联合类型用 type
+- import type 用于类型导入
+- ❌ 使用 `any` 类型（用 `unknown` 替代）
+- ❌ 使用 `@ts-ignore`（用 `@ts-expect-error` + 注释替代）
+- ❌ 滥用 `!` 非空断言（`obj!.prop`）
+- ❌ 在类型中使用 `Function` 类型（应使用具体函数签名）
+- ❌ 对基本类型装箱（`String`、`Number`、`Boolean`）
 
 ## 禁止
 

@@ -88,14 +88,24 @@ context: fork
 
 | 任务类型 | 识别特征 | 对应规范文件 |
 |----------|----------|-------------|
-| **组件开发** | 创建组件、修改组件 Props、编写 JSX | naming-conventions.md → component-patterns.md → react-jsx.md |
-| **样式编写** | 修改 .less/.css、使用 Tailwind | styling.md |
-| **API 调用** | 编写接口请求、axios 封装 | api-requests.md |
-| **状态管理** | 使用 Dva/RTK/Zustand、useState | state-management.md |
-| **类型定义** | 编写 interface/type、泛型 | typescript.md |
-| **导入组织** | import 语句、路径别名 | import-organization.md |
-| **文件组织** | 目录结构、文件拆分 | file-organization.md |
-| **代码审查** | review 代码、检查规范 | code-style.md |
+| **组件开发** [T1] | 创建组件、修改组件 Props、编写 JSX | naming-conventions.md → component-patterns.md → react-jsx.md |
+| **样式编写** [T6] | 修改 .less/.css、使用 Tailwind | styling.md |
+| **API 调用** [T5] | 编写接口请求、axios 封装 | api-requests.md |
+| **状态管理** [T4] | 使用 Dva/RTK/Zustand、useState | state-management.md |
+| **类型定义** [T7] | 编写 interface/type、泛型 | typescript.md |
+| **导入组织** [T3] | import 语句、路径别名 | import-organization.md |
+| **文件组织** [T8] | 目录结构、文件拆分 | file-organization.md |
+| **代码审查** [T9] | review 代码、检查规范 | code-style.md |
+
+> **任务-规范映射依据**（对应规范文件 `@trigger` 元数据）：
+> - [T1] → naming:「创建组件、页面文件」；component:「创建新的 React 组件」；react:「编写 JSX 代码」
+> - [T3] → import:「添加或修改 import 语句」
+> - [T4] → state:「使用 useState 或状态管理库」
+> - [T5] → api:「编写 API 请求接口」
+> - [T6] → styling:「编写或修改 CSS/Less 样式」
+> - [T7] → ts:「编写 interface 或 type 定义」
+> - [T8] → file:「设计项目目录结构」
+> - [T9] → code-style:「代码格式化检查、Review 代码风格」
 
 ### 第 2 步：检查本地配置
 
